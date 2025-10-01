@@ -1,2 +1,7 @@
 *.zip
 **/*.zip
+.env
+**/.env
+.DS_Store
+.venv
+.vscode
