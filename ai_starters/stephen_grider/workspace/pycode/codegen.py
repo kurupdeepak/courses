@@ -4,9 +4,11 @@ from langchain.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnableLambda
 from dotenv import load_dotenv
+from common.dev_config import llm
+
 load_dotenv()
 
-llm = OpenAI()
+# Make CHAT=false or remove 
 
 parser = StrOutputParser()
 
