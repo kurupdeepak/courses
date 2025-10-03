@@ -4,46 +4,42 @@ from langchain.chains import LLMChain
 from common.dev_config import chatllm
 from langchain.chains import ConversationChain
 from langchain_core.runnables import RunnablePassthrough
-from langchain.memory import ConversationBufferMemory
+from langchain.memory import ConversationBufferMemory,FileChatMessageHistory,ConversationSummaryMemory
 import sys
 # Make CHAT=true 
 
 if chatllm is None : 
     print("set the chat to true in the environment")
     sys.exit(1)
-# Step 2: Memory that tracks chat history
-convMemory = ConversationBufferMemory(memory_key="messages",return_messages=True)
 
-# Step 3: Prompt with memory placeholder
+# convMemory = ConversationBufferMemory(
+#     # chat_memory=FileChatMessageHistory("memory.json"),
+#     memory_key="messages",
+#     return_messages=True)
+convMemory = ConversationSummaryMemory(
+    # chat_memory=FileChatMessageHistory("memory.json"),
+    llm = chatllm,
+    memory_key="messages",
+    return_messages=True)
 
-# chatPrompt = ChatPromptTemplate.from_messages(
-#     messages=[
-#         MessagesPlaceholder(variable_name="history"),
-#         HumanMessagePromptTemplate.from_template("{content}")
-#     ]
-# )
 chatPrompt = ChatPromptTemplate(
-    input_variables=["content", "messages"],
-    messages=[
+    input_variables=["content","messages"],
+    messages = [
         MessagesPlaceholder(variable_name="messages"),
         HumanMessagePromptTemplate.from_template("{content}")
     ]
 )
 
-# Add to the chain memory
-# chain = memory | prompt | chatllm 
-# Step 4: Combine memory + prompt + model
-# chain = ConversationChain(
-#     llm = chatllm,
-#     prompt = chatPrompt,
-#     memory = convMemory
-# )
 
+
+# chain = chatPrompt | chatllm | memory
 chain = LLMChain(
     llm=chatllm,
     prompt=chatPrompt,
-    memory=convMemory
+    memory=convMemory,
+    verbose=True
 )
+
 
 while True:
     content = input(">> ")
@@ -51,7 +47,7 @@ while True:
     print(f"You entered: {content}")
 
     # result = chain.invoke({"content":content})
-    result = chain({"content": content})
-
-    # print(result.content)
+    # result = chain.invoke({"input": content})
+    result = chain({"content":content})
+    # print(result["content"])
     print(result["text"])

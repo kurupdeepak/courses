@@ -14,7 +14,7 @@ if ENV == "prod":
     modelToUse = "gpt-4o-mini"
     if CHAT == "true":
         from langchain_openai import ChatOpenAI
-        chatllm = ChatOpenAI(model=modelToUse)
+        chatllm = ChatOpenAI(model=modelToUse,verbose=True)
     else:
         from langchain_openai import OpenAI
         llm = OpenAI(model=modelToUse)  # or mistral, llama2, deepseek-coder
@@ -24,7 +24,7 @@ else:
     modelToUse = "codellama"
     if CHAT == "true":
         from langchain_community.chat_models import ChatOllama
-        chatllm = ChatOllama(model=modelToUse)
+        chatllm = ChatOllama(model=modelToUse,verbose=True)
     else:
         from langchain_community.llms.ollama import OllamaRunnable
         llm = OllamaRunnable(model=modelToUse)  # or mistral, llama2, deepseek-coder

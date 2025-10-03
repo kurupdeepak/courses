@@ -11,39 +11,26 @@ import sys
 if chatllm is None : 
     print("set the chat to true in the environment")
     sys.exit(1)
-# Step 2: Memory that tracks chat history
+
 convMemory = ConversationBufferMemory(memory_key="messages",return_messages=True)
 
-# Step 3: Prompt with memory placeholder
-
-# chatPrompt = ChatPromptTemplate.from_messages(
-#     messages=[
-#         MessagesPlaceholder(variable_name="history"),
-#         HumanMessagePromptTemplate.from_template("{content}")
-#     ]
-# )
 chatPrompt = ChatPromptTemplate(
-    input_variables=["content", "messages"],
-    messages=[
+    input_variables=["content","messages"],
+    messages = [
         MessagesPlaceholder(variable_name="messages"),
         HumanMessagePromptTemplate.from_template("{content}")
     ]
 )
 
-# Add to the chain memory
-# chain = memory | prompt | chatllm 
-# Step 4: Combine memory + prompt + model
-# chain = ConversationChain(
-#     llm = chatllm,
-#     prompt = chatPrompt,
-#     memory = convMemory
-# )
 
+
+# chain = chatPrompt | chatllm | memory
 chain = LLMChain(
     llm=chatllm,
     prompt=chatPrompt,
     memory=convMemory
 )
+
 
 while True:
     content = input(">> ")
@@ -51,7 +38,7 @@ while True:
     print(f"You entered: {content}")
 
     # result = chain.invoke({"content":content})
-    result = chain({"content": content})
-
-    # print(result.content)
+    # result = chain.invoke({"input": content})
+    result = chain({"content":content})
+    # print(result["content"])
     print(result["text"])
