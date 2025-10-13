@@ -26,3 +26,8 @@ check if the server is running
 curl http://localhost:11434
 -----------------
 Section 1 - ChatGPT and Langchain integration
+
+
+brew install sqlite
+--> sqlite3 <db-path>
+SQLite Viewer extension

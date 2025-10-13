@@ -1,13 +1,8 @@
-from dotenv import load_dotenv
-
-load_dotenv()
-
 from langchain.prompts import(
     ChatPromptTemplate,
     HumanMessagePromptTemplate,
     MessagesPlaceholder
 )
-
 from common.dev_config import chatllm
 
 from langchain.agents import OpenAIFunctionsAgent,AgentExecutor
@@ -19,16 +14,6 @@ from agents.tools.report import write_report_tool
 from langchain.schema import SystemMessage
 
 from langchain.memory import ConversationBufferMemory
-
-from handlers.chat_model_start_handler import ChatModelStartHandler
-
-from langchain_openai import ChatOpenAI
-
-handler = ChatModelStartHandler()
-
-modelToUse = "gpt-4o-mini"
-
-chatllm = ChatOpenAI(model=modelToUse,callbacks=[handler])
 
 tables = list_tables()
 # print(tables)
@@ -62,8 +47,8 @@ agent = OpenAIFunctionsAgent(
 
 agentExecutor = AgentExecutor(
     agent = agent,
+    verbose=True,
     tools = refTools,
-    # verbose=True
     memory=chatHistory
 )
 
